@@ -1,8 +1,8 @@
 const tableBody = document.querySelector('.table__body');
 const headers = document.querySelectorAll('.header');
 const tableHead = document.querySelector('.table__head');
-const form = document.querySelector('.edit-form');
-
+const form = document.querySelector('.edit-form__wrapper');
+const inputs = document.forms[0].elements;
 
 const fillTable = (json) => {
     json.forEach((data) => {
@@ -10,20 +10,25 @@ const fillTable = (json) => {
         row.innerHTML = `<td>${data.name.firstName}</td>
                          <td>${data.name.lastName}</td>
                          <td class="about">${data.about}</td>
-                         <td>${data.eyeColor}</td>`
+                         <td>${data.eyeColor}</td>`;
         row.classList.add('row');
         row.addEventListener('click', () => {
-            // const data = row.querySelectorAll('td');
             // data.forEach(d => console.log(d.innerText))
+            row.classList.toggle('selected');
             const position = row.getBoundingClientRect();
             const width = row.offsetWidth;
             form.style.left = position.left + window.pageXOffset + width + "px";
             form.style.top = position.top + window.pageYOffset + "px";
-            form.classList.toggle('active');
+            form.classList.toggle('opened');
+            const data = row.querySelectorAll('td');
+            data.forEach((d, i) => {
+                inputs[i].value = d.innerText;
+            });
         })
         tableBody.append(row);
     });
 }
+
 
 tableHead.addEventListener('click', (evt) => {
     const target = evt.target;

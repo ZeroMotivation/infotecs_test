@@ -22,18 +22,18 @@
                 <tbody class="table__body">
                 </tbody>
             </table>
-            <div class="edit-form">
+            <div class="edit-form__wrapper">
                 <form name="edit">
                     <div class="edit-form__container">
                         <div class="edit-form__inputs">
-                            <label>Имя<input type="text" name="name" class="input"></label>
-                            <label>Фамилия</label><input type="text" class="input">
-                            <label>Описание</label><input type="text" class="input">
-                            <label>Цвет глаз</label><input type="text" class="input">
+                            <label>Имя</label><input type="text" name="name" class="edit-form__input">
+                            <label>Фамилия</label><input type="text" class="edit-form__input">
+                            <label>Описание</label><textarea class="edit-form__input" name="about" rows="15"></textarea>
+                            <label>Цвет глаз</label><input type="text" class="edit-form__input">
                         </div>
                         <div class="edit-form__buttons">
-                            <button class="save-btn">Сохранить</button>
-                            <button class="cancel-btn">Отменить</button>
+                            <button type="button" class="save-btn">Сохранить</button>
+                            <button type="button" class="cancel-btn">Отменить</button>
                         </div>
                     </div>
                 </form>
