@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <script src="data.js"></script>
+        <title>Test</title>
+    </head>
+    <body>
+        <div class="wrapper">
+            <table class="table">
+                <thead class="table__head">
+                    <tr>
+                        <th class="header">Имя</th>
+                        <th class="header">Фамилия</th>
+                        <th class="header">Описание</th>
+                        <th class="header">Цвет глаз</th>
+                    </tr>
+                </thead>
+                <tbody class="table__body">
+                </tbody>
+            </table>
+            <div class="edit-form">
+                <form name="edit">
+                    <div class="edit-form__container">
+                        <div class="edit-form__inputs">
+                            <label>Имя<input type="text" name="name" class="input"></label>
+                            <label>Фамилия</label><input type="text" class="input">
+                            <label>Описание</label><input type="text" class="input">
+                            <label>Цвет глаз</label><input type="text" class="input">
+                        </div>
+                        <div class="edit-form__buttons">
+                            <button class="save-btn">Сохранить</button>
+                            <button class="cancel-btn">Отменить</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>
