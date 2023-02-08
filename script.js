@@ -3,10 +3,15 @@ const headers = document.querySelectorAll('.header');
 const tableHead = document.querySelector('.table__head');
 const form = document.querySelector('.edit-form__wrapper');
 const inputs = document.forms[0].elements;
+const nav = document.querySelector('.nav__container');
+const pageNum = document.querySelector('.nav__page');
 
 let activeRow = 0;
-const fillTable = (json) => {
-    json.forEach((data) => {
+let lastIndex = 0;
+let rows = [];
+const step = 10;
+const createRows = (json) => {
+    json.forEach((data, i) => {
         const row = document.createElement('tr');
         row.innerHTML = `<td>${data.name.firstName}</td>
                          <td>${data.name.lastName}</td>
@@ -36,9 +41,39 @@ const fillTable = (json) => {
                 });
             }
         })
-        tableBody.append(row);
+        rows.push(row);
     });
 }
+
+createRows(json);
+
+const renderTable = (index) => {
+    tableBody.innerHTML = "";
+    if(index === rows.length) {
+        index = 0;
+        lastIndex = 0;
+    }
+    if(index < 0) {
+        index = rows.length - step;
+        lastIndex = rows.length - 2 * step;
+    }
+    for(let i = index; i < index + step; i++) {
+        tableBody.append(rows[i]);
+        lastIndex = i + 1;
+    }
+}
+
+renderTable(0);
+
+nav.addEventListener('click', (evt) => {
+    const target = evt.target;
+    if(target.classList.contains('nav__next-btn')) {
+        renderTable(lastIndex);
+    }
+    if(target.classList.contains('nav__prev-btn')) {
+        renderTable(lastIndex - 2 * step);
+    }
+})
 
 form.addEventListener('click', (evt) => {
     const target = evt.target;
@@ -76,4 +111,3 @@ tableHead.addEventListener('click', (evt) => {
     tableBody.append(...sorted);
 });
 
-fillTable(json);
