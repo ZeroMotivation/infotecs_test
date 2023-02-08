@@ -6,33 +6,40 @@ const inputs = document.forms[0].elements;
 const nav = document.querySelector('.nav__container');
 const pageNum = document.querySelector('.nav__page');
 
-let activeRow = 0;
-let lastIndex = 0;
-let rows = [];
-const beginPage = 0;
-const endPage = 5;
-let page = beginPage;
-const step = 10;
+const STEP = 10; // Количество строк, отображаемых на странице
+const BEGIN_PAGE = 0; // Индекс начальной страницы
+const END_PAGE = 6; // Индекс конечной страницы
+
+const rows = [];
+
+let activeRow = 0; // Переменная для хранения активной на данный момент строки
+let lastIndex = 0; 
+let page = BEGIN_PAGE; // Текущий номер страницы
+
+// Создание строк таблицы и подписка строк на событие click
 const createRows = (json) => {
-    json.forEach((data, i) => {
+    json.forEach((data) => {
         const row = document.createElement('tr');
         row.innerHTML = `<td>${data.name.firstName}</td>
                          <td>${data.name.lastName}</td>
                          <td class="about">${data.about}</td>
-                         <td>${data.eyeColor}</td>`;
+                         <td class="color" style="background-color: ${data.eyeColor}; color: ${data.eyeColor};">${data.eyeColor}</td>`;
         row.classList.add('row');
+
         row.addEventListener('click', () => {
-            if(activeRow == row) {
-                activeRow = 0;
+            // При клике на строку смотрим - есть ли уже активаня строка
+            // Если есть - делаем активную строку неактивной
+            if(activeRow) {
+                activeRow.classList.remove('selected');
             }
-            else {
-                if(activeRow) {
-                    activeRow.classList.remove('selected');
-                }
-                activeRow = row;
-            }
-            row.classList.toggle('selected', activeRow == row);
+
+            // Если выбрана уже активная строка - текущая аткивная строка обнуляется
+            // Иначе ативная строка стнавится равна выбранной строке
+            activeRow = activeRow === row ? 0 : row;
+            row.classList.toggle('selected', activeRow === row);
             form.classList.toggle('opened', activeRow);
+
+            // Если сейчас есть активная строка - создаем форму редактирования данных рядом с этой строкой
             if(activeRow) {
                 const position = activeRow.getBoundingClientRect();
                 const width = activeRow.offsetWidth;
@@ -44,25 +51,30 @@ const createRows = (json) => {
                 });
             }
         })
+
         rows.push(row);
     });
 }
 
 createRows(json);
 
-const renderTable = (index) => {
+// Функция для отрисовки 10 строк таблицы
+// columnIndex - индекс строки массива rows, с которого начинаем добавление строк
+const renderTable = (columnIndex) => {
     tableBody.innerHTML = "";
-    if(index === rows.length) {
-        index = 0;
+    // Если дошли до последнего элемента - обнуляем индексы и номер страницы
+    // чтобы отрисовка строк началась сначала
+    if(columnIndex === rows.length) {
+        columnIndex = 0;
         lastIndex = 0;
         page = 0;
     }
-    if(index < 0) {
-        index = rows.length - step;
-        lastIndex = rows.length - 2 * step;
-        page = endPage;
+    if(columnIndex < 0) {
+        columnIndex = rows.length - STEP;
+        lastIndex = rows.length - 2 * STEP;
+        page = END_PAGE;
     }
-    for(let i = index; i < index + step; i++) {
+    for(let i = columnIndex; i < columnIndex + STEP; i++) {
         tableBody.append(rows[i]);
         lastIndex = i + 1;
     }
@@ -70,27 +82,32 @@ const renderTable = (index) => {
 
 renderTable(0);
 
+// Перелистывание страниц  
 nav.addEventListener('click', (evt) => {
     const target = evt.target;
     page = parseInt(pageNum.innerText);
     if(target.classList.contains('nav__next-btn')) {
         renderTable(lastIndex);
         ++page;
-        pageNum.innerText = page
     }
     if(target.classList.contains('nav__prev-btn')) {
-        renderTable(lastIndex - 2 * step);
+        renderTable(lastIndex - 2 * STEP);
         --page;
-        pageNum.innerText = page;
     }
+    pageNum.innerText = page;
+    form.classList.remove('opened');
 })
 
+// Форма редактирования строк
 form.addEventListener('click', (evt) => {
     const target = evt.target;
     if(target.classList.contains('save-btn')) {
         const cells = activeRow.querySelectorAll('td');
         cells.forEach((cell, i) => {
             cell.innerText = inputs[i].value;
+            if(cell.classList.contains('color')) {
+                cell.style.cssText = `background-color: ${inputs[i].value}; color: ${inputs[i].value};`;
+            }
         });
         activeRow.classList.remove('selected');
         form.classList.remove('opened');
@@ -102,22 +119,21 @@ form.addEventListener('click', (evt) => {
     }
 })
 
+// Сортировка строк по клику на соответсвующий заголовок
 tableHead.addEventListener('click', (evt) => {
     const target = evt.target;
-    const rows = document.querySelectorAll('.row');
-    target.classList.toggle('asc');
-    let index = 0;
+    // 
+    const sliced = rows.slice(lastIndex - 10, lastIndex);
+    target.classList.toggle('asc'); 
+    let columnIndex = 0;  // Индекс колонки, по которой выполняется сортировка 
     headers.forEach((header, i) => {
-        if(header == target) index = i;
+        if(header == target) columnIndex = i;
     })
-    let sorted = Array.from(rows).slice(0);
     if(target.classList.contains('asc')) {
-        sorted.sort((a, b) => a.cells[index].innerText > b.cells[index].innerText ? 1 : -1);
-        
+        sliced.sort((a, b) => a.cells[columnIndex].innerText > b.cells[columnIndex].innerText ? 1 : -1);
     }
     else {
-        sorted.sort((a, b) => a.cells[index].innerText < b.cells[index].innerText ? 1 : -1);
+        sliced.sort((a, b) => a.cells[columnIndex].innerText < b.cells[columnIndex].innerText ? 1 : -1);
     }
-    tableBody.append(...sorted);
+    tableBody.append(...sliced);
 });
-

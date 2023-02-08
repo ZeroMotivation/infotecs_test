@@ -4,11 +4,15 @@ html {
     --border-color: #afafae;
 }
 
-/* th,
 td {
-    
-    border: 1px solid #afafae;
-} */
+    min-width: 95px;
+    border: 1px solid var(--border-color);
+    padding: 0px 10px;
+}
+
+textarea {
+    resize: none;
+}
 
 .wrapper {
     display: flex;
@@ -18,16 +22,14 @@ td {
 
 .table {
     width: 50vw;
+    flex: 1 1 auto;
     border-collapse: collapse;
     border: 1px solid var(--border-color);
 }
 
-td {
+.header {
+    padding: 10px;
     border: 1px solid var(--border-color)
-}
-
-textarea {
-    resize: none;
 }
 
 .header:hover {
@@ -36,7 +38,7 @@ textarea {
 
 .row:hover {
     cursor: pointer;
-    /* background-color: antiquewhite; */
+    background-color: rgb(219, 211, 253);
 }
 
 .row {
@@ -50,6 +52,10 @@ textarea {
     -webkit-box-orient: vertical;
     overflow-y: hidden;
     border: none;
+}
+
+.color {
+    padding: 5px;;
 }
 
 .edit-form__wrapper {
@@ -90,14 +96,23 @@ textarea {
 .nav__container {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 50vw;
     margin-top: 10px;
+}
+
+.nav__btn {
+    width: 40px;
+    height: 40px;
+}
+
+.nav__btn:hover {
+    cursor: pointer;
 }
 
 .selected {
     background-color: rgb(165, 165, 252);
 }
-
 
 .opened {
     visibility: visible;
