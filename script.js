@@ -122,7 +122,6 @@ form.addEventListener('click', (evt) => {
 // Сортировка строк по клику на соответсвующий заголовок
 tableHead.addEventListener('click', (evt) => {
     const target = evt.target;
-    // 
     const sliced = rows.slice(lastIndex - 10, lastIndex);
     target.classList.toggle('asc'); 
     let columnIndex = 0;  // Индекс колонки, по которой выполняется сортировка 
