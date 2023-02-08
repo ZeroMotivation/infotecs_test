@@ -9,6 +9,9 @@ const pageNum = document.querySelector('.nav__page');
 let activeRow = 0;
 let lastIndex = 0;
 let rows = [];
+const beginPage = 0;
+const endPage = 5;
+let page = beginPage;
 const step = 10;
 const createRows = (json) => {
     json.forEach((data, i) => {
@@ -52,10 +55,12 @@ const renderTable = (index) => {
     if(index === rows.length) {
         index = 0;
         lastIndex = 0;
+        page = 0;
     }
     if(index < 0) {
         index = rows.length - step;
         lastIndex = rows.length - 2 * step;
+        page = endPage;
     }
     for(let i = index; i < index + step; i++) {
         tableBody.append(rows[i]);
@@ -67,11 +72,16 @@ renderTable(0);
 
 nav.addEventListener('click', (evt) => {
     const target = evt.target;
+    page = parseInt(pageNum.innerText);
     if(target.classList.contains('nav__next-btn')) {
         renderTable(lastIndex);
+        ++page;
+        pageNum.innerText = page
     }
     if(target.classList.contains('nav__prev-btn')) {
         renderTable(lastIndex - 2 * step);
+        --page;
+        pageNum.innerText = page;
     }
 })
 
